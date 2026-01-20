@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
+
 <body>
 
     <header class="site-header">
@@ -16,40 +18,108 @@
             <!-- Left: Logo -->
             <a class="header-logo" href="{% url 'home' %}" aria-label="Home">
                 <!-- Option A: image logo -->
-                 
-                <svg xmlns="http://www.w3.org/2000/svg" width="180" height="30" viewBox="0 0 100 20" role="img" aria-label="LEGENDS AUTOGRAPHS">
-                    <rect width="100" height="20" fill="none"/>
-                        <text
-                            x="50"
-                            y="13.5"
-                            text-anchor="middle"
-                            font-family="Arial, Helvetica, sans-serif"
-                            font-size="9"
-                            font-weight="700"
-                            letter-spacing="0.6"
-                        >
-                            LEGENDS AUTOGRAPHS
-                        </text>
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="180" height="30" viewBox="0 0 100 20" role="img"
+                    aria-label="LEGENDS AUTOGRAPHS">
+                    <rect width="100" height="20" fill="none" />
+                    <text x="50" y="13.5" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="9"
+                        font-weight="700" letter-spacing="0.6">
+                        LEGENDS AUTOGRAPHS
+                    </text>
                 </svg>
 
             </a>
 
-            <!-- Middle: Search -->
             <form class="header-search" method="get" action="{% url 'results' %}">
-                <input
-                    type="search"
-                    name="q"
-                    value="{{ q }}"
-                    autocomplete="off"
-                    autocapitalize="none"
-                    autocorrect="off"
-                    spellcheck="false"
-                    inputmode="search"
-                    placeholder="Search"
-                    aria-label="Search"
-                    value="{{ request.GET.q|default:'' }}"
-                >
+                <input type="search" name="q" value="{{ q }}" autocomplete="off" autocapitalize="none" autocorrect="off"
+                    spellcheck="false" inputmode="search" placeholder="Search" aria-label="Search">
+
+                <div class="header-filters">
+                    <button type="button" class="filters-btn" aria-haspopup="true" aria-expanded="false"
+                        aria-label="Filters">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="16"
+                            focusable="false" aria-hidden="true" style="pointer-events: none; display: block;">
+                            <path
+                                d="M9 3a4 4 0 00-3.874 3H3a1 1 0 000 2h2.126a4.002 4.002 0 007.748 0H21a1 1 0 100-2h-8.126A4 4 0 009 3Zm0 2a2 2 0 110 4 2 2 0 010-4Zm6 8a4 4 0 00-3.874 3H3a1 1 0 000 2h8.126a4.002 4.002 0 007.748 0H21a1 1 0 000-2h-2.126A4 4 0 0015 13Zm0 2a2 2 0 110 4 2 2 0 010-4Z">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <div class="filters-menu" role="menu" hidden>
+                        <div class="filters-menu__content">
+                            <div class="filters-menu__title-row">
+                                <div class="filters-menu__title">Tags</div>
+                                <button type="button" class="filters-clear">Clear</button>
+                            </div>
+
+                            <div class="filters-list">
+                                {% for tag in all_tags %}
+                                <label class="filter-item">
+                                    <input type="checkbox" name="tags" value="{{ tag.id }}"
+                                    {% if tag.id|stringformat:"s" in selected_tag_ids %}checked{% endif %}>
+                                    <span class="filter-check" aria-hidden="true"></span>
+                                    <span class="filter-name">{{ tag.name }}</span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
+
+            <script>
+                (function () {
+                    const wrap = document.querySelector(".header-filters");
+                    if (!wrap) return;
+
+                    const btn = wrap.querySelector(".filters-btn");
+                    const menu = wrap.querySelector(".filters-menu");
+                    const form = wrap.closest("form");
+                    const clearBtn = wrap.querySelector(".filters-clear");
+
+                    function closeMenu() {
+                        btn.setAttribute("aria-expanded", "false");
+                        menu.hidden = true;
+                    }
+
+                    function openMenu() {
+                        btn.setAttribute("aria-expanded", "true");
+                        menu.hidden = false;
+                    }
+
+                    btn.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        const isOpen = btn.getAttribute("aria-expanded") === "true";
+                        isOpen ? closeMenu() : openMenu();
+                    });
+
+                    menu.addEventListener("click", (e) => e.stopPropagation());
+
+                    document.addEventListener("click", (e) => {
+                        if (!wrap.contains(e.target)) closeMenu();
+                    });
+
+                    document.addEventListener("keydown", (e) => {
+                        if (e.key === "Escape") closeMenu();
+                    });
+
+                    // auto-apply when selecting tags
+                    menu.addEventListener("change", (e) => {
+                        if (e.target && e.target.matches('input[type="checkbox"][name="tags"]')) {
+                            form.requestSubmit();
+                        }
+                    });
+
+                    // clear tags only (keeps q)
+                    clearBtn.addEventListener("click", () => {
+                        menu.querySelectorAll('input[type="checkbox"][name="tags"]').forEach(cb => cb.checked = false);
+                        form.requestSubmit();
+                    });
+                })();
+            </script>
+
+
+
 
             <!-- Right: Contact -->
             <a class="header-link" href="{% url 'contact' %}">Contact</a>
@@ -63,4 +133,5 @@
     </main>
 
 </body>
+
 </html>

@@ -125,7 +125,7 @@ body {
   height: 36px;
   padding: 0 12px;
   border: 1px solid var(--input-border);
-  border-radius: 999px;
+  border-radius: 999px 0 0 999px;
   outline: none;
   background: var(--input-bg);
   color: var(--text);
@@ -145,13 +145,182 @@ body {
   color: inherit;
   padding: 8px 10px;
   border-radius: 10px;
-  border: 1px solid transparent;
 }
 
-.header-link:hover {
+
+
+
+/* Filters sits next to the search; doesn't steal width from it */
+.header-filters {
+  position: relative;            /* anchor dropdown */
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;                /* keep it tight */
+}
+
+.header-filters svg {
+    color: var(--text);
+    fill: var(--text);
+}
+
+/* Button matches your input styling */
+.filters-btn {
+  height: 36px;                  /* match search input height */
+  padding: 0 12px;
+  border: 1px solid var(--input-border);
+  border-radius: 0 999px 999px 0;          /* match pill shape */
+  background: var(--input-bg);
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.filters-btn:hover {
   background: var(--hover-bg);
   border-color: var(--border);
 }
+
+/* Use your focus color if present */
+.filters-btn:focus {
+  outline: none;
+  border-color: var(--focus);
+}
+
+.filters-caret {
+  opacity: 0.85;
+  font-size: 0.9em;
+}
+
+/* Dropdown panel */
+.filters-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 260px;
+  background: var(--bg);         /* same as header background */
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  z-index: 2000;                 /* above header z-index */
+}
+
+/* Content */
+.filters-menu__content {
+  padding: 12px;
+}
+
+.filters-menu__title {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.filters-menu__hint {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+
+/* Ensure search input takes remaining space inside flex .header-search */
+.header-search input[type="search"] {
+  flex: 1 1 auto;
+  min-width: 0; /* prevents overflow in flex layouts */
+}
+
+/* Dropdown title row (Tags + Clear button) */
+.filters-menu__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.filters-clear {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font: inherit;
+  padding: 6px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.filters-clear:hover {
+  color: var(--text);
+}
+
+/* Tag list */
+.filters-list {
+  display: grid;
+  gap: 6px;
+}
+
+/* Each selectable row */
+.filter-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.filter-item:hover {
+  background: var(--hover-bg);
+}
+
+/* Hide native checkbox; we draw our own */
+.filter-item input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Custom checkbox box */
+.filter-check {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--input-bg);
+  display: inline-block;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+/* Checked state + checkmark */
+.filter-item input[type="checkbox"]:checked + .filter-check {
+  background: var(--text);
+  border-color: var(--text);
+}
+
+.filter-item input[type="checkbox"]:checked + .filter-check::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: 2px solid var(--bg);
+  border-top: 0;
+  border-left: 0;
+  transform: rotate(45deg);
+}
+
+.filter-name {
+  color: var(--text);
+  font-size: 14px;
+}
+
+/* Prevent dropdown from going off-screen on narrow widths */
+.filters-menu {
+  max-width: min(320px, calc(100vw - 2rem));
+}
+
 
 /* Push page content below fixed header */
 .site-main {
@@ -167,7 +336,7 @@ body {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 3rem;
 }
 
