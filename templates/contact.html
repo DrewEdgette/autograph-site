@@ -1,8 +1,36 @@
+{# templates/detail.html #}
 {% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Legends Autographs{% endblock %}
 
 {% block content %}
-dont contact me.
+<main class="detail">
+    <div class="detail__container">
+        <section class="contact">
+            <h1>Contact</h1>
+
+            <p>
+                Questions about an autograph, pricing, or availability? Reach out and I’ll get back to you as soon as I
+                can.
+            </p>
+
+            <ul class="contact-links">
+                <li>
+                    <a href="mailto:YOUR_EMAIL_HERE">Email: YOUR_EMAIL_HERE</a>
+                </li>
+                <li>
+                    <a href="https://facebook.com/YOUR_FACEBOOK_PAGE_OR_PROFILE" target="_blank" rel="noopener">
+                        Facebook: Message me here
+                    </a>
+                </li>
+            </ul>
+
+            <p class="contact-note">
+                Please include the link to the autograph that you are interested in.
+            </p>
+        </section>
+
+    </div>
+</main>
 {% endblock %}
