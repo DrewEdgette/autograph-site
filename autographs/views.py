@@ -1,4 +1,4 @@
-from .models import Autograph, Tag
+from .models import Autograph, Tag, SiteSetting
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Case, When
 from rapidfuzz import fuzz, process
@@ -92,4 +92,9 @@ def contact(request):
 
 def autograph_detail(request, pk):
     autograph = get_object_or_404(Autograph, pk=pk)
-    return render(request, "detail.html", {"autograph": autograph})
+    site_settings = SiteSetting.get()
+    
+    return render(request, "detail.html", {
+        "autograph": autograph,
+        "shipping_cost_display": site_settings.shipping_cost_display,
+    })
