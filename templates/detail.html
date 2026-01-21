@@ -2,67 +2,76 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Legends Autographs{% endblock %}
+{% block title %}Legend Autographs{% endblock %}
 
 {% block content %}
 <main class="detail">
   <div class="detail__container">
     <a class="detail__back" href="{{ request.META.HTTP_REFERER|default_if_none:'/' }}">← Back</a>
 
-    <div class="detail__grid">
+
+    <div class="detail__meta">
+      <h1 class="detail__title">{{ autograph.name }}</h1>
+
+         {% if autograph.price %}
+      <div class="detail__price">${{ autograph.price }} USD</div>
+      {% endif %}
+
+
       <div class="detail__imageWrap">
         {% if autograph.image %}
-          {# Click-to-zoom (no JS) #}
-          <label class="detail__imageLink" for="img-modal" title="Click to enlarge">
-            <img class="detail__image" src="{{ autograph.image.url }}" alt="{{ autograph.name }}">
-          </label>
+        {# Click-to-zoom (no JS) #}
+        <label class="detail__imageLink" for="img-modal" title="Click to enlarge">
+          <img class="detail__image" src="{{ autograph.image.url }}" alt="{{ autograph.name }}">
+        </label>
 
-          <input class="detail__modalToggle" type="checkbox" id="img-modal" aria-hidden="true">
+        <input class="detail__modalToggle" type="checkbox" id="img-modal" aria-hidden="true">
 
-          {# Clicking backdrop closes (label toggles checkbox off) #}
-          <label class="detail__modal" for="img-modal" aria-label="Close image">
-            {# Stop close-on-click when clicking the image itself #}
-            <span class="detail__modalInner" role="dialog" aria-modal="true" aria-label="{{ autograph.name }}" onclick="event.stopPropagation();">
-              <img class="detail__modalImg" src="{{ autograph.image.url }}" alt="{{ autograph.name }}">
-              <span class="detail__modalClose" aria-hidden="true">×</span>
-            </span>
-          </label>
+        {# Clicking backdrop closes (label toggles checkbox off) #}
+        <label class="detail__modal" for="img-modal" aria-label="Close image">
+          {# Stop close-on-click when clicking the image itself #}
+          <span class="detail__modalInner" role="dialog" aria-modal="true" aria-label="{{ autograph.name }}"
+            onclick="event.stopPropagation();">
+            <img class="detail__modalImg" src="{{ autograph.image.url }}" alt="{{ autograph.name }}">
+            <span class="detail__modalClose" aria-hidden="true">×</span>
+          </span>
+        </label>
         {% else %}
-          <img class="detail__image" src="{% static 'placeholder.png' %}" alt="Autograph">
+        <img class="detail__image" src="{% static 'placeholder.png' %}" alt="Autograph">
         {% endif %}
       </div>
 
-      <div class="detail__meta">
-        <h1 class="detail__title">{{ autograph.name }}</h1>
-
-        {% if autograph.price %}
-          <div class="detail__price">${{ autograph.price }} USD</div>
-        {% endif %}
-
-        <div class="detail__RACC">
-            <a href="https://www.racctrusted.com/alexandre/" target="_blank">RACC</a> Trusted Seller
-        </div>
-
-        {% if autograph.tags.all %}
-          <div class="detail__tags">
-            {% for tag in autograph.tags.all %}
-              <span class="tag">{{ tag.name }}</span>
-            {% endfor %}
-          </div>
-        {% elif autograph.tags %}
-          <div class="detail__tags">
-            <span class="tag">{{ autograph.tags }}</span>
-          </div>
-        {% endif %}
-
-        {% if autograph.description %}
-          <div class="detail__section">
-            <h2 class="detail__sectionTitle">Notes</h2>
-            <p class="detail__description">{{ autograph.description }}</p>
-          </div>
-        {% endif %}
+      <div class="detail__RACC">
+        <a href="https://www.racctrusted.com/alexandre/" target="_blank">RACC</a> Trusted Seller
       </div>
+
+      {% if autograph.tags.all %}
+      <div class="detail__tags">
+        {% for tag in autograph.tags.all %}
+        <span class="tag">{{ tag.name }}</span>
+        {% endfor %}
+      </div>
+      {% elif autograph.tags %}
+      <div class="detail__tags">
+        <span class="tag">{{ autograph.tags }}</span>
+      </div>
+      {% endif %}
+
+      {% if autograph.description %}
+      <div class="detail__section">
+        <h2 class="detail__sectionTitle">Notes</h2>
+        <p class="detail__description">{{ autograph.description }}</p>
+      </div>
+      {% endif %}
+
     </div>
+
+
+
+
+
+
+
   </div>
 </main>
 {% endblock %}

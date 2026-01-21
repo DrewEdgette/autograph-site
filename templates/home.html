@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Legends Autographs{% endblock %}
+{% block title %}Legend Autographs{% endblock %}
 
 {% block content %}
 
  <div class="container">
         {% if q and autographs|length == 0 %}
-            <h1>No results found</h1>
-            <p>Try different keywords or remove search filters</p>
+        <div class="no-results">
+          <h1>No results found</h1>
+          <p>Try different keywords or remove search filters</p>
+        </div>
         {% endif %}
     <div class="grid">
       {% for autograph in autographs %}

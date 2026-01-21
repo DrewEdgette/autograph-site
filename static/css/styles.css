@@ -7,9 +7,11 @@
   --bg: #0f0f0f;     /* default background for everything */
   --panel: #0f0f0f;  /* panels/cards/header match bg */
   --card: #181a1b;
+  --tag: #717171; 
 
   /* Foreground */
   --text: #ffffff;
+  --tagtext: rgba(255, 255, 255, 0.7);
   --money: #02cb81;
   --cardtext: #0f0f0f;
   --muted: rgba(255, 255, 255, 0.7);
@@ -25,7 +27,7 @@
   --focus: rgb(0, 166, 255);
 
   /* Header */
-  --header-height: 56px;
+  --header-height: 64px;
 }
 
 /* System theme override (light) */
@@ -34,8 +36,10 @@
     --bg: #fafafa;
     --panel: #f0f0f0;
     --card: #ffffff;
+    --tag: #e2e2e2; 
 
     --text: #0f0f0f;
+    --tagtext: rgba(15, 15, 15, 0.7);
     --money: #00A86B;
     --muted: rgba(15, 15, 15, 0.65);
 
@@ -99,13 +103,20 @@ body {
   gap: 8px;
   text-decoration: none;
   color: inherit;
-  min-width: 56px;
+  width: 100px;
+  height: 100%;
 }
 
 .header-logo img {
-  height: 32px;
+  padding-top: 10px;
+  height: 80%;
   width: auto;
   display: block;
+  filter:
+    drop-shadow(0 2px 4px rgba(0,0,0,0.55))      /* dark depth */
+    drop-shadow(0 0 6px rgba(255, 60, 0, 0.55))  /* red */
+    drop-shadow(0 0 12px rgba(255, 140, 0, 0.45))/* orange */
+    drop-shadow(0 0 18px rgba(255, 220, 0, 0.35));/* yellow */
 }
 
 .header-logo svg text {
@@ -327,6 +338,137 @@ body {
   padding-top: var(--header-height);
 }
 
+
+.no-results {
+  text-align: center;
+}
+
+.contact {
+  text-align: center;
+}
+
+
+/* Contact actions (email + socials) */
+.contact-actions {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 12px;
+  padding: 50px;
+
+  /* center each card within the grid */
+  justify-items: center;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .contact-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contact-action {
+  display: flex;
+  align-items: left;
+  gap: 12px;
+  padding: 20px 10px;
+  border-radius: 14px;
+  background: var(--bg, #fff);
+  text-decoration: none;
+  color: var(--text, #111);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+
+  /* keep a nice centered card width */
+  width: 100%;
+  max-width: 370px;
+
+  /* center icon+text within the card */
+  justify-content: left;
+}
+
+.contact-action:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 0, 0, 0.14);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.10);
+}
+
+.contact-action:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.10);
+}
+
+.contact-action:focus-visible {
+  outline: 2px solid rgba(0, 0, 0, 0.35);
+  outline-offset: 3px;
+}
+
+.contact-action__icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.05);
+  flex: 0 0 auto;
+}
+
+.contact-action__icon svg {
+  width: 50px;
+  height: 50px;
+  color: var(--text, #111);
+}
+
+.contact-action__icon--img {
+  padding: 6px;                  /* gives the image some breathing room */
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.contact-action__icon--img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 10px;           /* optional */
+}
+
+.contact-action__icon--fb {
+  background: rgba(24, 119, 242, 0.12);
+}
+
+.contact-action__icon--fb svg {
+  color: rgb(24, 119, 242);
+}
+
+.contact-action__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  /* center label/value */
+  align-items: left;
+  text-align: left;
+}
+
+.contact-action__label {
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.contact-action__value {
+  font-size: 1.2rem;
+  opacity: 0.75;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+
+
+
+
 /* Existing layout */
 .container {
   width: min(1100px, calc(100% - 2rem));
@@ -407,12 +549,13 @@ body {
 
 .badge {
   font-size: 0.75rem;
-  background: var(--panel);
+  background: var(--tag);
   /* border: 1px solid var(--border); */
   border-radius: 6px;
-  color: var(--muted);
+  color: var(--tagtext);
   padding: 3px 6px;
 }
+
 
 /* ------------------------------ */
 /* Detail page (integrated)       */
@@ -424,9 +567,6 @@ body {
   padding: 2rem 0;
 }
 
-.detail__container {
-  /* optional wrapper hook */
-}
 
 .detail__back {
   display: inline-flex;
@@ -445,25 +585,26 @@ body {
   border-color: var(--border);
 }
 
-.detail__grid {
-  display: grid;
-  grid-template-columns: minmax(280px, 520px) 1fr;
-  gap: 24px;
-  align-items: start;
-}
+
+
 
 .detail__imageWrap {
   width: 100%;
   max-width: 520px;
-  background: var(--bg);
+  background: var(--card);
   border-radius: 16px;
   overflow: hidden;
+
+  display: grid;        /* ADDED */
+  place-items: center;  /* ADDED: centers image */
+  max-height: 60vh;         /* ADDED: fill grid cell height */
 }
 
 .detail__image {
-  width: 100%;
-  height: auto;
-  max-height: 70vh;
+  max-width: 100%;      /* CHANGED */
+  max-height: 70vh;     /* same as before intent */
+  width: auto;          /* CHANGED */
+  height: auto;         /* CHANGED */
   object-fit: contain;
   display: block;
 }
@@ -473,7 +614,10 @@ body {
 /* ------------------------------ */
 
 .detail__imageLink {
-  display: block;
+  display: grid;        /* CHANGED: was block */
+  place-items: center;  /* ADDED */
+  width: 100%;          /* ADDED */
+  height: 100%;         /* ADDED */
   cursor: zoom-in;
 }
 
@@ -540,10 +684,6 @@ body {
   color: var(--text);
 }
 
-/* Prevent scrolling behind modal (best-effort) */
-.detail__modalToggle:checked ~ * {
-  /* no-op placeholder: pure CSS can't reliably lock body scroll without :has() */
-}
 
 /* If your browser supports :has(), this locks scroll while open */
 @supports selector(body:has(.detail__modalToggle:checked)) {
@@ -559,6 +699,10 @@ body {
   padding: 1rem;
   display: grid;
   gap: 0.9rem;
+
+  width: 100%;          /* ADDED */
+  height: 100%;         /* ADDED: fill grid cell height */
+  align-self: stretch;  /* ADDED */
 }
 
 .detail__title {
@@ -575,8 +719,8 @@ body {
 }
 
 .detail__RACC a {
-    text-decoration: none;
-    color: rgb(0, 166, 255);
+  text-decoration: none;
+  color: rgb(0, 166, 255);
 }
 
 .detail__tags {
@@ -587,8 +731,8 @@ body {
 
 .tag {
   font-size: 0.75rem;
-  background: var(--panel);
-  color: var(--muted);
+  background: var(--tag);
+  color: var(--tagtext);
   /* border: 1px solid var(--border); */
   border-radius: 6px;
   padding: 3px 6px;
