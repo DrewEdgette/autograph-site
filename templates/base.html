@@ -116,7 +116,6 @@
           function closeMenu() {
             btn.setAttribute("aria-expanded", "false");
             menu.hidden = true;
-            // collapse submenus when closing main menu
             submenuBtns.forEach(b => collapseSubmenu(b));
           }
 
@@ -153,7 +152,6 @@
             if (e.key === "Escape") closeMenu();
           });
 
-          // Toggle submenus (only one open at a time)
           submenuBtns.forEach((subBtn) => {
             subBtn.addEventListener("click", (e) => {
               e.stopPropagation();
@@ -164,21 +162,14 @@
             });
           });
 
-          // auto-apply when selecting tags or sort
           menu.addEventListener("change", (e) => {
             const t = e.target;
             if (!t) return;
 
-            if (t.matches('input[type="checkbox"][name="tags"]')) {
-              form.requestSubmit();
-            }
-
-            if (t.matches('input[type="radio"][name="sort"]')) {
-              form.requestSubmit();
-            }
+            if (t.matches('input[type="checkbox"][name="tags"]')) form.requestSubmit();
+            if (t.matches('input[type="radio"][name="sort"]')) form.requestSubmit();
           });
 
-          // clear tags only (keeps q + sort)
           if (tagsClearBtn) {
             tagsClearBtn.addEventListener("click", () => {
               menu.querySelectorAll('input[type="checkbox"][name="tags"]').forEach(cb => cb.checked = false);
@@ -186,7 +177,6 @@
             });
           }
 
-          // clear sort only (keeps q + tags)
           if (sortClearBtn) {
             sortClearBtn.addEventListener("click", () => {
               menu.querySelectorAll('input[type="radio"][name="sort"]').forEach(rb => rb.checked = false);
@@ -196,8 +186,68 @@
         })();
       </script>
 
-      <!-- Right: Contact -->
-      <a class="header-link" href="{% url 'contact' %}">Contact</a>
+      <!-- Desktop links -->
+      <nav class="header-links" aria-label="Site">
+        <a class="header-link" href="{% url 'contact' %}">Newsletter</a>
+        <a class="header-link" href="{% url 'contact' %}">Contact</a>
+      </nav>
+
+      <!-- Mobile hamburger -->
+      <div class="header-more">
+        <button type="button" class="hamburger-btn" aria-haspopup="true" aria-expanded="false" aria-label="Menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <div class="hamburger-menu" role="menu" hidden>
+          <a class="hamburger-item" role="menuitem" href="{% url 'contact' %}">Newsletter</a>
+          <a class="hamburger-item" role="menuitem" href="{% url 'contact' %}">Contact</a>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          const root = document.querySelector(".header-more");
+          if (!root) return;
+
+          const btn = root.querySelector(".hamburger-btn");
+          const menu = root.querySelector(".hamburger-menu");
+
+          function close() {
+            btn.setAttribute("aria-expanded", "false");
+            menu.hidden = true;
+          }
+
+          function open() {
+            btn.setAttribute("aria-expanded", "true");
+            menu.hidden = false;
+          }
+
+          btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const isOpen = btn.getAttribute("aria-expanded") === "true";
+            isOpen ? close() : open();
+          });
+
+          menu.addEventListener("click", (e) => e.stopPropagation());
+
+          document.addEventListener("click", (e) => {
+            if (!root.contains(e.target)) close();
+          });
+
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") close();
+          });
+
+          // If resizing up to desktop, ensure menu closes
+          window.addEventListener("resize", () => {
+            if (window.matchMedia("(min-width: 721px)").matches) close();
+          });
+        })();
+      </script>
+
     </div>
   </header>
 
