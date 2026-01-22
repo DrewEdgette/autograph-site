@@ -3,124 +3,209 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Legend Autographs{% endblock %}</title>
-    {% block extra_head %}{% endblock %}
-    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Legend Autographs{% endblock %}</title>
+  {% block extra_head %}{% endblock %}
+  <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
+
+<script src="https://unpkg.com/htmx.org@1.9.12"></script>
 
 <body>
 
-    <header class="site-header">
-        <div class="header-inner">
-            <!-- Left: Logo -->
-            <a class="header-logo" href="{% url 'home' %}" aria-label="Home">
-                <img src="{% static 'favicon.png' %}" alt="Legend Autographs">
-            </a>
+  <header class="site-header">
+    <div class="header-inner">
+      <!-- Left: Logo -->
+      <a class="header-logo" href="{% url 'home' %}" aria-label="Home">
+        <img src="{% static 'favicon.png' %}" alt="Legend Autographs">
+      </a>
 
-            <form class="header-search" method="get" action="{% url 'results' %}">
-                <input type="search" name="q" value="{{ q }}" autocomplete="off" autocapitalize="none" autocorrect="off"
-                    spellcheck="false" inputmode="search" placeholder="Search" aria-label="Search">
+      <form class="header-search" method="get" action="{% url 'results' %}">
+        <input type="search" name="q" value="{{ q }}" autocomplete="off" autocapitalize="none" autocorrect="off"
+          spellcheck="false" inputmode="search" placeholder="Search" aria-label="Search">
 
-                <div class="header-filters">
-                    <button type="button" class="filters-btn" aria-haspopup="true" aria-expanded="false"
-                        aria-label="Filters">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="16"
-                            focusable="false" aria-hidden="true" style="pointer-events: none; display: block;">
-                            <path
-                                d="M9 3a4 4 0 00-3.874 3H3a1 1 0 000 2h2.126a4.002 4.002 0 007.748 0H21a1 1 0 100-2h-8.126A4 4 0 009 3Zm0 2a2 2 0 110 4 2 2 0 010-4Zm6 8a4 4 0 00-3.874 3H3a1 1 0 000 2h8.126a4.002 4.002 0 007.748 0H21a1 1 0 000-2h-2.126A4 4 0 0015 13Zm0 2a2 2 0 110 4 2 2 0 010-4Z">
-                            </path>
-                        </svg>
-                    </button>
+        <div class="header-filters">
+          <button type="button" class="filters-btn" aria-haspopup="true" aria-expanded="false" aria-label="Filters">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="16" focusable="false"
+              aria-hidden="true" style="pointer-events: none; display: block;">
+              <path
+                d="M9 3a4 4 0 00-3.874 3H3a1 1 0 000 2h2.126a4.002 4.002 0 007.748 0H21a1 1 0 100-2h-8.126A4 4 0 009 3Zm0 2a2 2 0 110 4 2 2 0 010-4Zm6 8a4 4 0 00-3.874 3H3a1 1 0 000 2h8.126a4.002 4.002 0 007.748 0H21a1 1 0 000-2h-2.126A4 4 0 0015 13Zm0 2a2 2 0 110 4 2 2 0 010-4Z">
+              </path>
+            </svg>
+          </button>
 
-                    <div class="filters-menu" role="menu" hidden>
-                        <div class="filters-menu__content">
-                            <div class="filters-menu__title-row">
-                                <div class="filters-menu__title">Tags</div>
-                                <button type="button" class="filters-clear">Clear</button>
-                            </div>
+          <div class="filters-menu" role="menu" hidden>
+            <div class="filters-menu__content">
 
-                            <div class="filters-list">
-                                {% for tag in all_tags %}
-                                <label class="filter-item">
-                                    <input type="checkbox" name="tags" value="{{ tag.id }}"
-                                    {% if tag.id|stringformat:"s" in selected_tag_ids %}checked{% endif %}>
-                                    <span class="filter-check" aria-hidden="true"></span>
-                                    <span class="filter-name">{{ tag.name }}</span>
-                                </label>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
+              <!-- TAGS SUBMENU -->
+              <div class="filters-submenu">
+                <button type="button" class="submenu-btn" aria-expanded="false">
+                  <span>Tags</span>
+                  <span class="submenu-caret" aria-hidden="true">▾</span>
+                </button>
+
+                <div class="submenu-panel" hidden>
+                  <div class="submenu-title-row">
+                    <div class="submenu-title">Tags</div>
+                    <button type="button" class="filters-clear-tags">Clear</button>
+                  </div>
+
+                  <div class="filters-list">
+                    {% for tag in all_tags %}
+                    <label class="filter-item">
+                      <input type="checkbox" name="tags" value="{{ tag.id }}"
+                        {% if tag.id|stringformat:"s" in selected_tag_ids %}checked{% endif %}>
+                      <span class="filter-check" aria-hidden="true"></span>
+                      <span class="filter-name">{{ tag.name }}</span>
+                    </label>
+                    {% endfor %}
+                  </div>
                 </div>
-            </form>
+              </div>
 
-            <script>
-                (function () {
-                    const wrap = document.querySelector(".header-filters");
-                    if (!wrap) return;
+              <!-- SORT SUBMENU -->
+              <div class="filters-submenu">
+                <button type="button" class="submenu-btn" aria-expanded="false">
+                  <span>Sort</span>
+                  <span class="submenu-caret" aria-hidden="true">▾</span>
+                </button>
 
-                    const btn = wrap.querySelector(".filters-btn");
-                    const menu = wrap.querySelector(".filters-menu");
-                    const form = wrap.closest("form");
-                    const clearBtn = wrap.querySelector(".filters-clear");
+                <div class="submenu-panel" hidden>
+                  <div class="submenu-title-row">
+                    <div class="submenu-title">Sort</div>
+                    <button type="button" class="filters-clear-sort">Clear</button>
+                  </div>
 
-                    function closeMenu() {
-                        btn.setAttribute("aria-expanded", "false");
-                        menu.hidden = true;
-                    }
+                  <div class="sort-list" role="radiogroup" aria-label="Sort options">
+                    <label class="sort-item">
+                      <input type="radio" name="sort" value="price_asc"
+                        {% if sort == "price_asc" %}checked{% endif %}>
+                      <span class="sort-label">Price: Lowest → Highest</span>
+                    </label>
 
-                    function openMenu() {
-                        btn.setAttribute("aria-expanded", "true");
-                        menu.hidden = false;
-                    }
+                    <label class="sort-item">
+                      <input type="radio" name="sort" value="price_desc"
+                        {% if sort == "price_desc" %}checked{% endif %}>
+                      <span class="sort-label">Price: Highest → Lowest</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
 
-                    btn.addEventListener("click", (e) => {
-                        e.stopPropagation();
-                        const isOpen = btn.getAttribute("aria-expanded") === "true";
-                        isOpen ? closeMenu() : openMenu();
-                    });
-
-                    menu.addEventListener("click", (e) => e.stopPropagation());
-
-                    document.addEventListener("click", (e) => {
-                        if (!wrap.contains(e.target)) closeMenu();
-                    });
-
-                    document.addEventListener("keydown", (e) => {
-                        if (e.key === "Escape") closeMenu();
-                    });
-
-                    // auto-apply when selecting tags
-                    menu.addEventListener("change", (e) => {
-                        if (e.target && e.target.matches('input[type="checkbox"][name="tags"]')) {
-                            form.requestSubmit();
-                        }
-                    });
-
-                    // clear tags only (keeps q)
-                    clearBtn.addEventListener("click", () => {
-                        menu.querySelectorAll('input[type="checkbox"][name="tags"]').forEach(cb => cb.checked = false);
-                        form.requestSubmit();
-                    });
-                })();
-            </script>
-
-
-
-
-            <!-- Right: Contact -->
-            <a class="header-link" href="{% url 'contact' %}">Contact</a>
+            </div>
+          </div>
         </div>
-    </header>
+      </form>
 
-    <main class="site-main">
-        <div class="main-wrapper">
-            {% block content %}{% endblock %}
-        </div>
-    </main>
+      <script>
+        (function () {
+          const wrap = document.querySelector(".header-filters");
+          if (!wrap) return;
+
+          const btn = wrap.querySelector(".filters-btn");
+          const menu = wrap.querySelector(".filters-menu");
+          const form = wrap.closest("form");
+
+          const tagsClearBtn = wrap.querySelector(".filters-clear-tags");
+          const sortClearBtn = wrap.querySelector(".filters-clear-sort");
+
+          const submenuBtns = Array.from(wrap.querySelectorAll(".submenu-btn"));
+
+          function closeMenu() {
+            btn.setAttribute("aria-expanded", "false");
+            menu.hidden = true;
+            // collapse submenus when closing main menu
+            submenuBtns.forEach(b => collapseSubmenu(b));
+          }
+
+          function openMenu() {
+            btn.setAttribute("aria-expanded", "true");
+            menu.hidden = false;
+          }
+
+          function collapseSubmenu(subBtn) {
+            subBtn.setAttribute("aria-expanded", "false");
+            const panel = subBtn.closest(".filters-submenu")?.querySelector(".submenu-panel");
+            if (panel) panel.hidden = true;
+          }
+
+          function expandSubmenu(subBtn) {
+            subBtn.setAttribute("aria-expanded", "true");
+            const panel = subBtn.closest(".filters-submenu")?.querySelector(".submenu-panel");
+            if (panel) panel.hidden = false;
+          }
+
+          btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const isOpen = btn.getAttribute("aria-expanded") === "true";
+            isOpen ? closeMenu() : openMenu();
+          });
+
+          menu.addEventListener("click", (e) => e.stopPropagation());
+
+          document.addEventListener("click", (e) => {
+            if (!wrap.contains(e.target)) closeMenu();
+          });
+
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeMenu();
+          });
+
+          // Toggle submenus (only one open at a time)
+          submenuBtns.forEach((subBtn) => {
+            subBtn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              const isOpen = subBtn.getAttribute("aria-expanded") === "true";
+
+              submenuBtns.forEach(b => collapseSubmenu(b));
+              if (!isOpen) expandSubmenu(subBtn);
+            });
+          });
+
+          // auto-apply when selecting tags or sort
+          menu.addEventListener("change", (e) => {
+            const t = e.target;
+            if (!t) return;
+
+            if (t.matches('input[type="checkbox"][name="tags"]')) {
+              form.requestSubmit();
+            }
+
+            if (t.matches('input[type="radio"][name="sort"]')) {
+              form.requestSubmit();
+            }
+          });
+
+          // clear tags only (keeps q + sort)
+          if (tagsClearBtn) {
+            tagsClearBtn.addEventListener("click", () => {
+              menu.querySelectorAll('input[type="checkbox"][name="tags"]').forEach(cb => cb.checked = false);
+              form.requestSubmit();
+            });
+          }
+
+          // clear sort only (keeps q + tags)
+          if (sortClearBtn) {
+            sortClearBtn.addEventListener("click", () => {
+              menu.querySelectorAll('input[type="radio"][name="sort"]').forEach(rb => rb.checked = false);
+              form.requestSubmit();
+            });
+          }
+        })();
+      </script>
+
+      <!-- Right: Contact -->
+      <a class="header-link" href="{% url 'contact' %}">Contact</a>
+    </div>
+  </header>
+
+  <main class="site-main">
+    <div class="main-wrapper">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
 
 </body>
 

@@ -1,0 +1,33 @@
+{% for autograph in page_obj %}
+  <a class="card" href="{% url 'detail' autograph.pk %}">
+    <div class="card__media">
+      {% if autograph.image %}
+        <img src="{{ autograph.image.url }}" alt="{{ autograph.name }}" loading="lazy" decoding="async">
+      {% endif %}
+    </div>
+
+    <div class="card__body">
+      <h2 class="card__title">{{ autograph.name }}</h2>
+
+      <div class="card__meta">
+        <div class="badges">
+          {% for tag in autograph.tags.all %}
+            <span class="badge">{{ tag.name }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="card__price">${{ autograph.price }} USD</div>
+      </div>
+    </div>
+  </a>
+{% endfor %}
+
+{% if page_obj.has_next %}
+  <div
+    id="loader"
+    class="load-more-sentinel"
+    hx-get="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q|urlencode }}{% endif %}{% if sort %}&sort={{ sort|urlencode }}{% endif %}{% for tid in selected_tag_ids %}&tags={{ tid }}{% endfor %}"
+    hx-trigger="revealed"
+    hx-swap="outerHTML"
+  ></div>
+{% endif %}

@@ -93,7 +93,7 @@ body {
   height: 100%;
   display: flex;
   align-items: center;
-  gap: 64px;
+  gap: 128px;
   width: min(1100px, calc(100% - 2rem));
   margin: 0 auto;
 }
@@ -162,7 +162,6 @@ body {
 
 
 
-
 /* Filters sits next to the search; doesn't steal width from it */
 .header-filters {
   position: relative;            /* anchor dropdown */
@@ -172,8 +171,8 @@ body {
 }
 
 .header-filters svg {
-    color: var(--text);
-    fill: var(--text);
+  color: var(--text);
+  fill: var(--text);
 }
 
 /* Button matches your input styling */
@@ -203,17 +202,12 @@ body {
   border-color: var(--focus);
 }
 
-.filters-caret {
-  opacity: 0.85;
-  font-size: 0.9em;
-}
-
 /* Dropdown panel */
 .filters-menu {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
-  min-width: 260px;
+  min-width: 280px;
   background: var(--bg);         /* same as header background */
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -224,17 +218,178 @@ body {
 /* Content */
 .filters-menu__content {
   padding: 12px;
+  display: grid;
+  gap: 10px;
 }
 
-.filters-menu__title {
-  font-weight: 700;
-  margin-bottom: 6px;
+/* Submenu shell */
+.filters-submenu {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--input-bg);
+  overflow: hidden;
 }
 
-.filters-menu__hint {
+/* Submenu button row */
+.submenu-btn {
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  color: var(--text);
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.submenu-btn:hover {
+  background: var(--hover-bg);
+}
+
+.submenu-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0); /* keeps layout stable if you swap to a focus ring later */
+}
+
+/* Caret (rotates when expanded) */
+.submenu-caret {
+  display: inline-block;
+  transition: transform 160ms ease;
   color: var(--muted);
-  font-size: 0.92rem;
 }
+
+.submenu-btn[aria-expanded="true"] .submenu-caret {
+  transform: rotate(180deg);
+}
+
+/* Panel area */
+.submenu-panel {
+  padding: 10px 12px 12px;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+
+/* Header row inside submenu */
+.submenu-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.submenu-title {
+  font-weight: 700;
+}
+
+/* Clear buttons */
+.filters-clear-tags,
+.filters-clear-sort {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  padding: 4px 6px;
+  border-radius: 8px;
+}
+
+.filters-clear-tags:hover,
+.filters-clear-sort:hover {
+  background: var(--hover-bg);
+  color: var(--text);
+}
+
+/* Tags list */
+.filters-list {
+  display: grid;
+  gap: 8px;
+  max-height: 240px;
+  overflow: auto;
+  padding-right: 2px; /* keeps scrollbar from covering text */
+  scrollbar-width: thin;                 /* Firefox */
+  scrollbar-color: var(--border) transparent;
+}
+
+.filter-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+/* Hide native checkbox; style via .filter-check */
+.filter-item input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.filter-check {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  background: var(--input-bg);
+  display: inline-block;
+  flex: 0 0 16px;
+  position: relative;
+}
+
+.filter-item input[type="checkbox"]:checked + .filter-check {
+  border-color: var(--focus);
+}
+
+.filter-item input[type="checkbox"]:checked + .filter-check::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--text);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.filter-name {
+  line-height: 1.2;
+}
+
+/* Sort list */
+.sort-list {
+  display: grid;
+  gap: 8px;
+}
+
+.sort-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.sort-item input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--focus);
+}
+
+.sort-label {
+  line-height: 1.2;
+}
+
 
 
 /* Ensure search input takes remaining space inside flex .header-search */
@@ -366,6 +521,10 @@ body {
 @media (max-width: 640px) {
   .contact-actions {
     grid-template-columns: 1fr;
+  }
+
+  .header-inner {
+    gap: 16px;
   }
 }
 
@@ -845,4 +1004,9 @@ body {
 /* Toggle modal open */
 .detail__modalToggle:checked + .detail__modal {
   display: flex;
+}
+
+
+.load-more-sentinel {
+  height: 1px;
 }

@@ -4,43 +4,16 @@
 {% block title %}Legend Autographs{% endblock %}
 
 {% block content %}
-
- <div class="container">
-        {% if q and autographs|length == 0 %}
-        <div class="no-results">
-          <h1>No results found</h1>
-          <p>Try different keywords or remove search filters</p>
-        </div>
-        {% endif %}
-    <div class="grid">
-      {% for autograph in autographs %}
-        <a class="card" href="{% url 'detail' autograph.pk %}">
-          <div class="card__media">
-            {% if autograph.image %}
-              <img src="{{ autograph.image.url }}" alt="{{ autograph.name }}">
-            {% endif %}
-          </div>
-
-          <div class="card__body">
-            <h2 class="card__title">{{ autograph.name }}</h2>
-
-            <div class="card__meta">
-              <div class="badges">
-                {% for tag in autograph.tags.all %}
-                  <span class="badge">{{ tag.name }}</span>
-                {% endfor %}
-              </div>
-
-              <div class="card__price">${{ autograph.price }} USD</div>
-            </div>
-          </div>
-        </a>
-      {% endfor %}
-
-
-
-
+<div class="container">
+  {% if q and page_obj.paginator.count == 0 %}
+    <div class="no-results">
+      <h1>No results found</h1>
+      <p>Try different keywords or remove search filters</p>
     </div>
-  </div>
+  {% endif %}
 
+  <div class="grid" id="grid">
+    {% include "partials/_autograph_page.html" %}
+  </div>
+</div>
 {% endblock %}
