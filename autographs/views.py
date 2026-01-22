@@ -167,6 +167,10 @@ def contact(request):
     return render(request, "contact.html")
 
 
+def newsletter(request):
+    return render(request, "newsletter.html")
+
+
 def autograph_detail(request, pk):
     autograph = get_object_or_404(Autograph, pk=pk)
     site_settings = SiteSetting.get()
