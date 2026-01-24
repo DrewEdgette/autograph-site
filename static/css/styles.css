@@ -93,7 +93,7 @@ body {
   height: 100%;
   display: flex;
   align-items: center;
-  gap: 128px;
+  gap: 100px;
   width: min(1100px, calc(100% - 2rem));
   margin: 0 auto;
 }
@@ -553,10 +553,13 @@ body {
   text-align: center;
 }
 
+
+/* =========================================================
+   CONTACT (shared + layout)
+   ========================================================= */
 .contact {
   text-align: center;
 }
-
 
 /* Contact actions (email + socials) */
 .contact-actions {
@@ -564,6 +567,8 @@ body {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 12px;
+
+  /* desktop/tablet padding */
   padding: 50px;
 
   /* center each card within the grid */
@@ -571,25 +576,29 @@ body {
   align-items: center;
 }
 
+/* Existing header behavior you had */
 @media (max-width: 720px) {
-   .header-links { display: none; }
-   .header-more { display: inline-block; }
-}
-
-
-@media (max-width: 640px) {
-  .contact-actions {
-    grid-template-columns: 1fr;
-  }
+  .header-links { display: none; }
+  .header-more { display: inline-block; }
 
   .header-inner {
-    gap: 16px;
+    gap: 32px;
   }
 }
 
+/* Make the regular layout fit on mobile */
+@media (max-width: 720px) {
+  .contact-actions {
+    padding: 16px; /* reduce side padding so nothing forces overflow */
+  }
+}
+
+/* =========================================================
+   CONTACT ACTION (regular)
+   ========================================================= */
 .contact-action {
   display: flex;
-  align-items: left;
+  align-items: flex-start;
   gap: 12px;
   padding: 20px 10px;
   border-radius: 14px;
@@ -598,31 +607,11 @@ body {
   color: var(--text, #111);
   transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
 
-  /* keep a nice centered card width */
+  /* width rules */
   width: 100%;
   max-width: 370px;
 
-  /* center icon+text within the card */
-  justify-content: left;
-}
-
-.contact-action-small {
-  display: flex;
-  align-items: left;
-  gap: 12px;
-  padding: 20px 10px;
-  border-radius: 14px;
-  background: var(--card);
-  text-decoration: none;
-  color: var(--text, #111);
-  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
-
-  /* keep a nice centered card width */
-  width: 100%;
-  max-width: 370px;
-
-  /* center icon+text within the card */
-  justify-content: left;
+  justify-content: flex-start;
 }
 
 .contact-action:hover {
@@ -641,7 +630,25 @@ body {
   outline-offset: 3px;
 }
 
+/* =========================================================
+   CONTACT ACTION (small)
+   ========================================================= */
+.contact-action-small {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px 10px;
+  border-radius: 14px;
+  background: var(--card);
+  text-decoration: none;
+  color: var(--text, #111);
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
 
+  width: 100%;
+  max-width: 370px;
+
+  justify-content: flex-start;
+}
 
 .contact-action-small:hover {
   transform: translateY(-1px);
@@ -659,21 +666,12 @@ body {
   outline-offset: 3px;
 }
 
-
-
+/* =========================================================
+   ICONS (regular + small)
+   ========================================================= */
 .contact-action__icon {
   width: 60px;
   height: 60px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  background: rgba(0, 0, 0, 0.05);
-  flex: 0 0 auto;
-}
-
-.contact-action__icon-small {
-  width: 30px;
-  height: 30px;
   border-radius: 12px;
   display: grid;
   place-items: center;
@@ -687,14 +685,25 @@ body {
   color: var(--text, #111);
 }
 
+.contact-action__icon-small {
+  width: 30px;
+  height: 30px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.05);
+  flex: 0 0 auto;
+}
+
 .contact-action__icon-small svg {
   width: 20px;
   height: 20px;
   color: var(--text, #111);
 }
 
+/* Icon variants (shared) */
 .contact-action__icon--img {
-  padding: 6px;                  /* gives the image some breathing room */
+  padding: 6px; /* gives the image some breathing room */
   background: rgba(0, 0, 0, 0.05);
 }
 
@@ -703,7 +712,7 @@ body {
   height: 100%;
   object-fit: contain;
   display: block;
-  border-radius: 10px;           /* optional */
+  border-radius: 10px; /* optional */
 }
 
 .contact-action__icon--fb {
@@ -714,13 +723,18 @@ body {
   color: rgb(24, 119, 242);
 }
 
+/* =========================================================
+   TEXT (shared + sizes)
+   ========================================================= */
 .contact-action__text {
   display: flex;
   flex-direction: column;
-  min-width: 0;
 
-  /* center label/value */
-  align-items: left;
+  /* critical: allows flex child text to shrink instead of forcing overflow */
+  min-width: 0;
+  flex: 1 1 auto;
+
+  align-items: flex-start;
   text-align: left;
 }
 
@@ -739,6 +753,8 @@ body {
 .contact-action__value {
   font-size: 1.2rem;
   opacity: 0.75;
+
+  /* desktop behavior */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -747,10 +763,39 @@ body {
 .contact-action__value-small {
   font-size: 0.9rem;
   opacity: 0.75;
+
+  /* desktop behavior */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* Mobile: let long strings (emails/handles) break instead of overflowing */
+@media (max-width: 720px) {
+  .contact-action__label { font-size: 1.1rem; }
+  .contact-action__value { font-size: 1rem; }
+
+  .contact-action__value,
+  .contact-action__value-small {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* Slightly smaller regular icon on phones */
+  .contact-action__icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .contact-action__icon svg {
+    width: 36px;
+    height: 36px;
+  }
+}
+
 
 
 
@@ -1069,4 +1114,22 @@ body {
 
 .load-more-sentinel {
   height: 1px;
+}
+
+
+@media (max-width: 640px) {
+  .contact-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .header-inner {
+    gap: 32px;
+  }
+
+  .contact-action {
+    padding: 20px 10px;
+  }
+
+  
+  
 }
