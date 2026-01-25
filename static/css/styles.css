@@ -811,8 +811,8 @@ body {
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 3rem;
-  row-gap: 4.5rem;
+  gap: 1rem;
+  row-gap: 4rem;
 }
 
 /* Card */
