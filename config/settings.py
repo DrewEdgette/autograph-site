@@ -150,7 +150,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 if DEBUG:
     STATICFILES_DIRS = [BASE_DIR / "static"]
 else:
-    STATICFILES_DIRS = []
+    STATICFILES_DIRS = [BASE_DIR / "static"]
 
 
 # Media + storage (default: local filesystem; prod can switch to DO Spaces)
