@@ -12,6 +12,7 @@ admin.site.__class__ = AdminSiteOTPRequired
 # Allow env override, but normalize it for Django's path()
 ADMIN_PATH = os.environ.get("DJANGO_ADMIN_PATH", "admin/").strip()
 ADMIN_PATH = ADMIN_PATH.lstrip("/")  # no leading slash
+
 if not ADMIN_PATH.endswith("/"):
     ADMIN_PATH += "/"
 

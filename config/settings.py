@@ -10,14 +10,18 @@ load_dotenv(ENV_FILE)
 
 def env_bool(name: str, default: bool = False) -> bool:
     val = os.getenv(name)
+
     if val is None:
         return default
+
     return val.strip().lower() in ("1", "true", "t", "yes", "y", "on")
 
 def env_list(name: str, default: str = "") -> list[str]:
     raw = os.getenv(name, default).strip()
+
     if not raw:
         return []
+        
     return [x.strip() for x in raw.split(",") if x.strip()]
 
 ENVIRONMENT = os.getenv("DJANGO_ENV", "development").strip().lower()
@@ -34,7 +38,8 @@ if not SECRET_KEY:
     # Dev fallback only (do not rely on this in prod)
     SECRET_KEY = "dev-only-insecure-secret-key"
 
-DEBUG = env_bool("DJANGO_DEBUG", default=not IS_PROD)
+DEBUG = 0
+DEBUG = env_bool("DJANGO_DEBUG", default=False)
 
 ALLOWED_HOSTS = env_list(
     "DJANGO_ALLOWED_HOSTS",
@@ -148,10 +153,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 if IS_PROD:
     # If you’re behind a proxy (nginx/Cloudflare) and terminating TLS there:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SECURE_SSL_REDIRECT = env_bool("DJANGO_SECURE_SSL_REDIRECT", default=True)
+    SECURE_SSL_REDIRECT = True
+    USE_X_FORWARDED_HOST = True
 
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+
+    SECURE_HSTS_SECONDS = 60 * 60 * 24 * 7
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = False
 
     SECURE_HSTS_SECONDS = int(os.getenv("DJANGO_HSTS_SECONDS", "31536000"))
     SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool("DJANGO_HSTS_INCLUDE_SUBDOMAINS", default=True)
