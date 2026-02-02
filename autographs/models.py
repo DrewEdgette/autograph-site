@@ -31,6 +31,12 @@ class Autograph(models.Model):
     description = models.TextField(blank=True, default="")
     image = models.ImageField(upload_to="autographs/")
     price = models.DecimalField(max_digits=8, decimal_places=2)
+
+    size = models.CharField(
+        max_length=50,
+        default="8×10 in (20×25 cm)",
+    )
+    
     tags = models.ManyToManyField(Tag, blank=True, related_name="autographs")
     created_at = models.DateTimeField(auto_now_add=True)
 

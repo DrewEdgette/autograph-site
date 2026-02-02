@@ -15,7 +15,7 @@ class AutographAdmin(admin.ModelAdmin):
     ordering = ["-created_at"]
 
     # optional: control layout on the edit form
-    fields = ("id", "name", "description", "image", "price", "tags", "created_at")
+    fields = ("id", "name", "description", "image", "price", "size", "tags", "created_at")
     readonly_fields = ("id", "created_at")
 
 

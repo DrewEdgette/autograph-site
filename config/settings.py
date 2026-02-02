@@ -191,6 +191,7 @@ if DO_SPACES_BUCKET:
     # Serve media from CDN if available; otherwise via endpoint/bucket URL
     if DO_SPACES_CDN_DOMAIN:
         MEDIA_URL = f"https://{DO_SPACES_CDN_DOMAIN.rstrip('/')}/"
+        
     elif DO_SPACES_ENDPOINT_URL:
         MEDIA_URL = f"{DO_SPACES_ENDPOINT_URL.rstrip('/')}/{DO_SPACES_BUCKET}/"
 
