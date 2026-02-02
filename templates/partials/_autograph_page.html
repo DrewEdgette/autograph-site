@@ -1,8 +1,8 @@
 {% for autograph in page_obj %}
   <a class="card" href="{% url 'detail' autograph.pk %}">
     <div class="card__media">
-      {% if autograph.image %}
-        <img src="{{ autograph.image.url }}" alt="{{ autograph.name }}" loading="lazy" decoding="async">
+      {% if autograph.thumb %}
+        <img src="{{ autograph.thumb.url }}" alt="{{ autograph.name }}" loading="lazy" decoding="async">
       {% endif %}
     </div>
 
@@ -16,7 +16,7 @@
           {% endfor %}
         </div>
 
-        <div class="card__price">${{ autograph.price }} USD</div>
+        <div class="card__price">€{{ autograph.price }} EUR</div>
       </div>
     </div>
   </a>
