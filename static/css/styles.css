@@ -114,6 +114,8 @@ body {
   height: 80%;
   width: auto;
   display: block;
+  transform: translate3d(0,0,0);
+  will-change: filter;
   filter:
     drop-shadow(0 2px 4px rgba(0,0,0,0.55))      /* dark depth */
     drop-shadow(0 0 6px rgba(255, 60, 0, 0.55))  /* red */
@@ -131,6 +133,12 @@ body {
   flex: 1;
   display: flex;
   align-items: center;
+}
+
+.site-header,
+.header-inner,
+.header-logo {
+  overflow: visible; /* important */
 }
 
 .header-search input[type="search"] {
