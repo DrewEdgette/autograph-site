@@ -592,6 +592,13 @@ body {
   .header-inner {
     gap: 32px;
   }
+
+  .header-search input[type="search"],
+  .header-search input[type="text"],
+  .header-search input {
+    font-size: 16px;
+    line-height: 1.2;
+  }
 }
 
 /* Make the regular layout fit on mobile */
